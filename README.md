@@ -1,6 +1,8 @@
-# schummar-translate
+# schummar-translate-sync
 
 TypeScript powered translation library for React and Node.js.
+
+![schummar-translate](https://github.com/schummar/schummar-translate) but without Promises
 
 [![](https://badgen.net/npm/v/schummar-translate)](https://www.npmjs.com/package/schummar-translate)
 [![](https://badgen.net/bundlephobia/minzip/schummar-translate)](https://bundlephobia.com/package/schummar-translate)
