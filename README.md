@@ -2,7 +2,8 @@
 
 TypeScript powered translation library for React and Node.js.
 
-![schummar-translate](https://github.com/schummar/schummar-translate) but without Promises
+This is fork of ![schummar-translate](https://github.com/schummar/schummar-translate),
+the difference being that this version doesn't support async dictonaries
 
 [![](https://badgen.net/npm/v/schummar-translate)](https://www.npmjs.com/package/schummar-translate)
 [![](https://badgen.net/bundlephobia/minzip/schummar-translate)](https://bundlephobia.com/package/schummar-translate)
@@ -79,8 +80,8 @@ type Options = {
   sourceLocale: string;
   fallbackLocale?: string | readonly string[] | ((locale: string) => string | readonly string[]);
   dicts?:
-    | { [locale: string]: PartialDict<D> | (() => MaybePromise<PartialDict<D>>) }
-    | ((locale: string) => MaybePromise<PartialDict<D> | null>);
+    | { [locale: string]: PartialDict<D> | (() => PartialDict<D>) }
+    | ((locale: string) => PartialDict<D> | null);
   warn?: (locale: string, id: string) => void;
   fallback?: string | ((id: string, sourceTranslation: string) => string);
   placeholder?: string | ((id: string, sourceTranslation: string) => string);
@@ -112,11 +113,10 @@ The are two versions of this function, depending on the used import. When import
 - `sourceDictionary` takes the source dictionary as seen above. If not provided, the dictionary for the source language will be loaded as any other. Also, if not provided, you will have to explicitly set the dictionary type: `createTranslator<typeof mySourceDict>(...)`.
 - `sourceLocale` is the locale of the source dictionary as [ISO-639-1 code](https://de.wikipedia.org/wiki/Liste_der_ISO-639-1-Codes).
 - `fallbackLocale` provides a locale that will be used as fallback if a translation key is not available for some locale.
-- `dicts` provides all languages except the source language. It can either be an object with the locales as key and a dictionary or promise of a dictionary as value. Or it can be a function returning a dictionary or promise of a dictionary for a given locale. The last can be used to lazy load locales (expect source locale), for example with dynamic imports: `` dicts: (locale: string) => import(`./langs/${locale}`).then(mod => mod.default) `` or getting it from a cdn via `fetch`.
+- `dicts` provides all languages except the source language. It can either be an object with the locales as key and a dictionary. Or it can be a function returning a dictionary for a given locale. The last can be used to lazy load locales (expect source locale), for example with dynamic imports: `` dicts: (locale: string) => import(`./langs/${locale}`).then(mod => mod.default) `` or getting it from a cdn via `fetch`.
 - `warn` lets you display warnings (e.g. to `console.warn`) when a translation key is missing in the active locale and no fallback is used.
 - `fallback` lets you define you a static or dynamic string that will be displayed whenever a translation key is missing for the active locale.
 - `fallbackElement` the same as `fallback` but also allows to pass a `ReactNode` to display more complex (e.g styled) fallbacks for translations embedded in JSX.
-- `placeholder` lets you define a string that will be displayed in place of a translated string while the active locale is loading (when using promises)
 - `placeholderElement` the same as `placeholder` but also allows to pass a `ReactNode` to display more complex (e.g styled) placeholders for translations embedded in JSX.
 - `cacheOptions.maxEntries` the maximum amount of entries that are kept in cache. The cache is currently used to memoize Intl instances, since creating them is quite expensive.
 - `cacheOptions.ttl` how long cache entries are kept, in milliseconds. Cleanup happens on next cache miss.
@@ -233,7 +233,7 @@ For more details see [t](#t), [t.unknown](#tunknown) and [t.format](#tformat).
 ### getTranslator
 
 ```ts
-function getTranslator(locale: string): Promise<Translator>;
+function getTranslator(locale: string): Translator;
 
 type Translator = {
   (id: K, values: V, options?: Options): string | string[];
@@ -247,7 +247,7 @@ type Options = {
 }
 ```
 
-Returns a promise of a translator object. That method can be used in the backend or in the frontend outside of React components. It loads the necessary locales first then resolves the promise. The resulting translator is again very similar to `t` but obviously returning string and not ReactNode.
+Returns a  translator object. That method can be used in the backend or in the frontend outside of React components. The resulting translator is again very similar to `t` but obviously returning string and not ReactNode.
 If the dictionary value is an array, an array of translated string will be returned.
 For more details see [t](#t), [t.unknown](#tunknown) and [t.format](#tformat).
 
