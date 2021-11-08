@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.0](https://www.github.com/Mortynex/schummar-translate-sync/compare/v1.8.1...v1.9.0) (2021-11-08)
+
+
+### Features
+
+* removed promise support and its types ([d09cf80](https://www.github.com/Mortynex/schummar-translate-sync/commit/d09cf800dc57f36bf5c70e3f42e33491a9058ebb))
+* updated package.json ([8ef96b5](https://www.github.com/Mortynex/schummar-translate-sync/commit/8ef96b50be2752e55b8a716ecdced4bb8c4cc8db))
+
 ### [1.8.1](https://www.github.com/schummar/schummar-translate/compare/v1.8.0...v1.8.1) (2021-11-02)
 
 
