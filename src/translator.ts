@@ -19,12 +19,12 @@ export const createGetTranslator =
       pluralRulesOptions,
       relativeTimeFormatOptions,
     }: CreateTranslatorOptions<D>,
-  ): ((locale: string) => Promise<Translator<FlattenDict<D>>>) =>
-  async (locale: string) => {
+  ): ((locale: string) => Translator<FlattenDict<D>>) =>
+  (locale: string) => {
     type FD = FlattenDict<D>;
 
-    const dicts = await store.loadAll(locale, ...calcLocales(locale, fallbackLocale));
-    const sourceDict = await store.load(sourceLocale);
+    const dicts = store.loadAll(locale, ...calcLocales(locale, fallbackLocale));
+    const sourceDict = store.load(sourceLocale);
 
     const t: TranslatorFn<FD> = (id, ...[values, options]) => {
       const fallback = options?.fallback ?? globalFallback;

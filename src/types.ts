@@ -6,7 +6,6 @@ import { ListFormatOptions } from './polyfills/intl_listFormat';
 ////////////////////////////////////////////////////////////////////////////////
 // Helpers
 ////////////////////////////////////////////////////////////////////////////////
-export type MaybePromise<T> = T | Promise<T>;
 
 /** Merge tuple into intersection */
 export type Merge<T> = T extends [infer A, ...infer Rest] ? (Rest extends [any, ...any] ? A & Merge<Rest> : A) : T;
@@ -42,7 +41,7 @@ export interface CreateTranslatorOptions<D extends Dict> {
   /** Dictionaries. Either a record with locales as keys or a function that takes a locale and returns a promise of a dictionary
    * @param locale the active locale
    */
-  dicts?: { [locale: string]: Dict | (() => MaybePromise<Dict>) } | ((locale: string) => MaybePromise<Dict | null>);
+  dicts?: { [locale: string]: Dict | (() => Dict) } | ((locale: string) => Dict | null);
   /** Custom fallback handler. Will be called when a string is not available in the active locale.
    * @param id flat dictionary key
    * @param sourceTranslation translated string in source locale
@@ -68,7 +67,7 @@ export interface CreateTranslatorOptions<D extends Dict> {
 
 export interface CreateTranslatorResult<D extends FlatDict> {
   /** Returns a promise for a translator instance */
-  getTranslator: (locale: string) => Promise<Translator<D>>;
+  getTranslator: (locale: string) => Translator<D>;
 
   /** Clear all dictionary data. As needed the dictionaries will be reloaded. Useful for OTA translation updates. */
   clearDicts: () => void;

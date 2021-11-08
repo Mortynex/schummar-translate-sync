@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { FlatDict, MaybePromise } from '..';
+import { FlatDict } from '..';
 import { hash } from '../cache';
 import { arrEquals } from '../helpers';
 import { Store } from '../store';
 
-export function useStore(store: Store, ...locales: string[]): MaybePromise<FlatDict>[] {
+export function useStore(store: Store, ...locales: string[]): FlatDict[] {
   const [, setCounter] = useState(0);
 
   useEffect(() => {

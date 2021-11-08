@@ -1,6 +1,5 @@
 import { parse } from '@formatjs/icu-messageformat-parser';
 import { IntlMessageFormat } from 'intl-messageformat';
-import { MaybePromise } from '.';
 import { Cache } from './cache';
 import { mapPotentialArray } from './mapPotentialArray';
 import { FlatDict } from './types';
@@ -16,8 +15,8 @@ export function translate<F = never>({
   warn,
   cache,
 }: {
-  dicts: MaybePromise<FlatDict>[];
-  sourceDict?: MaybePromise<FlatDict> | null;
+  dicts: FlatDict[];
+  sourceDict?: FlatDict | null;
   id: string;
   values?: any;
   fallback?: F | ((id: string, sourceTranslation?: string | readonly string[]) => F);
@@ -30,29 +29,12 @@ export function translate<F = never>({
     dicts = dicts.slice(0, 1);
   }
 
-  const dict = dicts.find((dict) => dict instanceof Promise || id in dict);
-
-  if (dict instanceof Promise) {
-    return mapPotentialArray(
-      sourceDict && !(sourceDict instanceof Promise)
-        ? translate<string>({ dicts: [sourceDict], sourceDict, id, values, locale, cache })
-        : undefined,
-      (sourceTranslation) => {
-        if (placeholder instanceof Function) {
-          return placeholder(id, sourceTranslation);
-        }
-        return placeholder ?? '';
-      },
-    );
-  }
+  const dict = dicts.find((dict) => id in dict);
 
   const template = dict?.[id];
   if (!template) {
     if (fallback instanceof Function) {
-      const sourceTranslation =
-        sourceDict && !(sourceDict instanceof Promise)
-          ? translate<string>({ dicts: [sourceDict], sourceDict, id, values, locale, cache })
-          : undefined;
+      const sourceTranslation = sourceDict ? translate<string>({ dicts: [sourceDict], sourceDict, id, values, locale, cache }) : undefined;
       return fallback(id, sourceTranslation);
     }
     if (fallback !== undefined) return fallback;
