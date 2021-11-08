@@ -1,6 +1,6 @@
 {
-  "name": "schummar-translate",
-  "repository": "schummar/schummar-translate",
+  "name": "schummar-translate-sync",
+  "repository": "mortynex/schummar-translate-sync",
   "version": "1.8.1",
   "description": "TypeScript powered translation library for React and Node.js.",
   "keywords": [
