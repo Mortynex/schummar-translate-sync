@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import anyTest, { ExecutionContext, TestInterface } from 'ava';
 import React, { ReactNode, useState } from 'react';
 import { FlattenDict } from '../src';
-import { createTranslator, HookTranslator, MaybePromise, TranslationContextProvider } from '../src/react';
+import { createTranslator, HookTranslator, TranslationContextProvider } from '../src/react';
 import { dictDe, dictEn, dictEs, wait } from './_helpers';
 
 type D = FlattenDict<typeof dictEn>;
@@ -61,7 +61,7 @@ const date = new Date(2000, 1, 2, 3, 4, 5);
 const forCases = (
   name: string,
   renderFn: (t: HookTranslator<D>) => ReactNode,
-  assertionFn: (t: ExecutionContext, div: HTMLElement) => MaybePromise<void>,
+  assertionFn: (t: ExecutionContext, div: HTMLElement) => void,
   { locales, initialLocale }: { locales?: string[]; initialLocale?: string } = {},
 ) => {
   for (const i of [0, 1]) {
@@ -323,7 +323,7 @@ test('render', async (t) => {
 test('placeholder', async (t) => {
   const { t: _t } = createTranslator<typeof dictEn>({
     sourceLocale: 'en',
-    dicts: { en: dictEn, de: async () => dictDe },
+    dicts: { en: dictEn, de: () => dictDe },
     fallback: () => '-',
     placeholder: (id, st) => (typeof st === 'string' ? st.replace(/./g, '.') : '...'),
   });
@@ -333,7 +333,6 @@ test('placeholder', async (t) => {
   t.is(div.textContent, 'key1:en');
 
   fireEvent.click(div);
-  t.is(div.textContent, '.......');
 
   await wait(2);
   t.is(div.textContent, 'key1:de');
